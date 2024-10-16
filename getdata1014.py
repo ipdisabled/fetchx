@@ -41,6 +41,7 @@ class Fetcher:
         try:
             logger.info(f"Fetching URL:{url}")
             response = self.session.get(url,timeout=timeout)
+            print(response)
             time.sleep(6)
             response.encoding = chardet.detect(response.content)['encoding']
             response.raise_for_status()
