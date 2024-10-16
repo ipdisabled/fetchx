@@ -54,7 +54,22 @@ pipeline = {
              'save_conf':{'path':'pl5_data.csv','colname':['index','time','r1','r2','r3','r4','r5']}}
         ],
         'links':[]
-    }
+    },
+    'foot_new':{
+        'nodes':[
+            {'id':'issueid','url':'https://cp.zgzcw.com/lottery/getissue.action?lotteryId=300&issueLen=20',
+             'func':'fetch_parse_c','output_val':[]},
+            {'id':'matchlist','url':'https://cp.zgzcw.com/lottery/zcplayvs.action?lotteryId=13&issue=',
+             'func':'fetch_parse_d','output_val':[]},
+            {'id':'bjop','url':'https://fenxi.zgzcw.com/?playid?/bjop',
+             'func':'fetch_parse_e','output_val':[]},
+            {'id':'sink','url':'','func':'fetch_parse_f','output_val':[],
+             'save_conf':{'path':'footnewinfo__data.csv','colname':[]}},
+        ],
+        'links':[{'from':'issueid','to':'matchlist'},
+                 {'from':'matchlist','to':'bjop'},
+                 {'from':'bjop','to':'sink'}]
+    },
 }
 
 class Fetcher:
@@ -101,9 +116,12 @@ class Parser:
         if span_element:
             parts = span_element[0].text.split('|')
             # 去除每部分前后的空格，并分割成列表  
-            lsd_values = [float(num) for num in parts[0].strip().split()[1:]]  
-            fc_values = [float(num) for num in parts[1].strip().split()[1:]]  
-            
+            lsd_values = [round(float(num)/10,2) for num in parts[0].strip().split()[1:]]
+            if '\xa0\xa0' in parts[0]:
+                lsd_values = lsd_values[:1] + [0.00] + lsd_values[1:]
+            fc_values = [round(float(num),2) for num in parts[1].strip().split()[1:]]  
+            if '\xa0\xa0' in parts[1]:
+                fc_values = fc_values[:1] + [0.00] + fc_values[1:]            
             return {'lsd': lsd_values, 'fc': fc_values}
         else:
             print(f'未找到元素')
@@ -168,10 +186,12 @@ class SNode:
         '''get input +combine url / parse data + output'''
         data = fetcher.fetch_url(url,'json')
         if data:
-            for item in data:
-                match_dict = {'issueid':item['issue'],'startTime':item['startTime'],
+            for index, item in enumerate(data):
+                #最多取在售前3期
+                if index < 3:
+                    match_dict = {'issueid':item['issue'],'startTime':item['startTime'],
                              'endTime':item['endTime'],'leftTime':item['leftTime']}
-                self.output.append(match_dict)
+                    self.output.append(match_dict)
 
     def fetch_parse_d(self,input,baseurl:str):
         '''get input +combine url / parse data + output'''
@@ -182,13 +202,16 @@ class SNode:
             if data:
                 for item in data['matchInfo']:
                     self.output.append({'issueid':match_id['issueid'],'playid':item['playId'],'leage':item['leageName'],
-                             'host':item['hostNameFull'],'guest':item['guestNameFull']})        
+                             'host':item['hostNameFull'],'guest':item['guestNameFull']})
 
     def fetch_parse_e(self,input,baseurl:str):
         '''get input +combine url / parse data + output'''
         next_info_dict_li = input
         next_info_df = pd.DataFrame()
         for dict_item in next_info_dict_li:
+            if dict_item['playid'] == '0':
+                logger.warning(f"odds info is None Skip!!!")
+                continue
             url = baseurl.replace('?playid?',dict_item['playid'])
             data = fetcher.fetch_url(url,'text')
             if data:
