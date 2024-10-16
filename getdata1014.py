@@ -54,31 +54,7 @@ pipeline = {
              'save_conf':{'path':'pl5_data.csv','colname':['index','time','r1','r2','r3','r4','r5']}}
         ],
         'links':[]
-    },
-    'foot_his':{
-        'nodes':[
-            {'id':'foot_his','url':'https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry?gameNo=90&provinceId=0&&isVerify=1&pageSize=30&pageNo=',
-             'func':'fetch_parse_b','output_val':[],
-             'save_conf':{'path':'foot_his_data.csv','colname':['index','time','r1','r2','r3','r4','r5','r6','r7',
-            'r8','r9','r10','r11','r12','r13','r14']}}
-        ],
-        'links':[]
-    },
-    'foot_new':{
-        'nodes':[
-            {'id':'issueid','url':'https://cp.zgzcw.com/lottery/getissue.action?lotteryId=300&issueLen=20',
-             'func':'fetch_parse_c','output_val':[]},
-            {'id':'matchlist','url':'https://cp.zgzcw.com/lottery/zcplayvs.action?lotteryId=13&issue=',
-             'func':'fetch_parse_d','output_val':[]},
-            {'id':'bjop','url':'https://fenxi.zgzcw.com/?playid?/bjop',
-             'func':'fetch_parse_e','output_val':[]},
-            {'id':'sink','url':'','func':'fetch_parse_f','output_val':[],
-             'save_conf':{'path':'footnewinfo__data.csv','colname':[]}},
-        ],
-        'links':[{'from':'issueid','to':'matchlist'},
-                 {'from':'matchlist','to':'bjop'},
-                 {'from':'bjop','to':'sink'}]
-    },
+    }
 }
 
 class Fetcher:
