@@ -17,7 +17,7 @@ pipeline = {
     'foot_his':{
         'nodes':[
             {'id':'foot_his','url':'https://mix.lottery.sina.com.cn/gateway/index/entry?callback=cbbitem2&__caller__=web&__verno__=1&__version__=1&cat1=gameOpenList&format=json&lottoType=401&pageSize=30&page=1&paginationType=1&dpc=1',
-             'func':'fetch_parse_b','output_val':[],
+             'func':'fetch_parse_bb','output_val':[],
              'save_conf':{'path':'foot_his_data.csv','colname':['index','time','r1','r2','r3','r4','r5','r6','r7',
             'r8','r9','r10','r11','r12','r13','r14']}}
         ],
@@ -112,6 +112,13 @@ class SNode:
                 self.output.append(sp_li)
             self.save_data(self.output)
 
+    def fetch_parse_bb(self,input,baseurl:str):
+        data = fetcher.fetch_url(url,'json')
+        print(data)
+        url2 = 'https://mix.lottery.sina.com.cn/gateway/index/entry?callback=cbitem1&__caller__=web&__verno__=1&__version__=1&cat1=gameOpenInfo&format=json&lottoType=401&issueNo=24157&dpc=1'
+        data = fetcher.fetch_url(url2,'json')
+        print(data)
+    
     def fetch_parse_b(self,input,baseurl:str):
         local_df = self.get_local_df()
         local_li = local_df.values.tolist() if local_df is not None else []
