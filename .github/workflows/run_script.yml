@@ -1,0 +1,31 @@
+on:
+  schedule:
+  - cron: "0 6 * * *"
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+    - uses: actions/checkout@v2
+    - name: Set up Python
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.9.7'
+    - name: install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run script
+      run: python getdata1014.py
+    - name: Commit and push changes
+      run: |
+        git config --local user.name "github-actions"
+        git config --local user.name "github-actions@github.com"
+        git add .
+        git commit -m "Update generated files" || echo "changes to commit"
+        git push
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      
+  
