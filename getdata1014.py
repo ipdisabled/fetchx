@@ -113,7 +113,7 @@ class SNode:
             self.save_data(self.output)
 
     def fetch_parse_bb(self,input,baseurl:str):
-        data = fetcher.fetch_url(url,'json')
+        data = fetcher.fetch_url(baseurl,'json')
         print(data)
         url2 = 'https://mix.lottery.sina.com.cn/gateway/index/entry?callback=cbitem1&__caller__=web&__verno__=1&__version__=1&cat1=gameOpenInfo&format=json&lottoType=401&issueNo=24157&dpc=1'
         data = fetcher.fetch_url(url2,'json')
