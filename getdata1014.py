@@ -14,62 +14,15 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 pipeline = {
-    'dlt':{
+    'foot_his':{
         'nodes':[
-            {'id':'dlt','url':'https://data.17500.cn/dlt_asc.txt',
-             'func':'fetch_parse_a','output_val':[],
-             'save_conf':{'path':'dlt_data.csv','colname':['index','time','r1','r2','r3','r4','r5','b1','b2']}}
+            {'id':'foot_his','url':'https://mix.lottery.sina.com.cn/gateway/index/entry?callback=cbbitem2&__caller__=web&__verno__=1&__version__=1&cat1=gameOpenList&format=json&lottoType=401&pageSize=30&page=1&paginationType=1&dpc=1',
+             'func':'fetch_parse_b','output_val':[],
+             'save_conf':{'path':'foot_his_data.csv','colname':['index','time','r1','r2','r3','r4','r5','r6','r7',
+            'r8','r9','r10','r11','r12','r13','r14']}}
         ],
         'links':[]
-    },
-    'ssq':{
-        'nodes':[
-            {'id':'ssq','url':'https://data.17500.cn/ssq_asc.txt',
-             'func':'fetch_parse_a','output_val':[],
-             'save_conf':{'path':'ssq_data.csv','colname':['index','time','r1','r2','r3','r4','r5','r6','b1']}}
-        ],
-        'links':[]        
-    },
-    'kl8':{
-        'nodes':[
-            {'id':'kl8','url':'https://data.17500.cn/kl8_asc.txt',
-             'func':'fetch_parse_a','output_val':[],
-             'save_conf':{'path':'kl8_data.csv','colname':['index','time','r1','r2','r3','r4','r5','r6','r7',
-            'r8','r9','r10','r11','r12','r13','r14','r15','r16','r17','r18','r19','r20']}}
-        ],
-        'links':[]        
-    },
-    'pl3':{
-        'nodes':[
-            {'id':'pl3','url':'https://data.17500.cn/pl3_asc.txt',
-             'func':'fetch_parse_a','output_val':[],
-             'save_conf':{'path':'pl3_data.csv','colname':['index','time','r1','r2','r3']}}
-        ],
-        'links':[]        
-    },
-    'pl5':{
-        'nodes':[
-            {'id':'pl5','url':'https://data.17500.cn/pl5_asc.txt',
-             'func':'fetch_parse_a','output_val':[],
-             'save_conf':{'path':'pl5_data.csv','colname':['index','time','r1','r2','r3','r4','r5']}}
-        ],
-        'links':[]
-    },
-    'foot_new':{
-        'nodes':[
-            {'id':'issueid','url':'https://cp.zgzcw.com/lottery/getissue.action?lotteryId=300&issueLen=20',
-             'func':'fetch_parse_c','output_val':[]},
-            {'id':'matchlist','url':'https://cp.zgzcw.com/lottery/zcplayvs.action?lotteryId=13&issue=',
-             'func':'fetch_parse_d','output_val':[]},
-            {'id':'bjop','url':'https://fenxi.zgzcw.com/?playid?/bjop',
-             'func':'fetch_parse_e','output_val':[]},
-            {'id':'sink','url':'','func':'fetch_parse_f','output_val':[],
-             'save_conf':{'path':'footnewinfo__data.csv','colname':[]}},
-        ],
-        'links':[{'from':'issueid','to':'matchlist'},
-                 {'from':'matchlist','to':'bjop'},
-                 {'from':'bjop','to':'sink'}]
-    },
+    }
 }
 
 class Fetcher:
